@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIPHY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="min-h-[100vh] bg-black">
+        <h1 class="pt-5 text-center font-semibold text-white text-2xl">GIPHY PARTY</h1>
+        <div class="mt-5 flex justify-center">
+            <input type="text" class="rounded-md px-3" placeholder="Enter a search item" id="txtsearch">
+            <button class="ml-1 bg-[#333] px-5 py-2 rounded-md text-white border border-[#333] hover:border-[#272882] transition-all" id="search" onclick="handleSearch()">Search GIPHY!</button>
+            <button class="ml-1 bg-[red] px-5 py-2 rounded-md text-white" id="remove" onclick="handleRemove()">Remove Images</button>
+        </div>
+
+        <div class="mt-5 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-4 gap-[15px]" id="view">
+
+        </div>
+    </div>
+
+    <script>
+        let img = []
+
+        const handleSearch = async () => {
+            const query = document.getElementById('txtsearch').value.trim()
+            const data = await axios.get(`http://api.giphy.com/v1/gifs/search?q=${query}&api_key=VyaixrSVtn8gub4ifoAWaVr4Fn1rgmoP`)
+            console.log(data.data.data[0].images.downsized.url);
+            img.push(data.data.data[0].images.downsized.url)
+            render()
+            document.getElementById('txtsearch').value = ''
+        }
+
+        const render = () => {
+            const htmls = img.map(item => (`<img src='${item}' class='rounded-lg'>`))
+            document.getElementById('view').innerHTML = htmls.join('')
+        }
+
+        const handleRemove = () => {
+            img = []
+            render()
+        }
+    </script>
+</body>
+
+</html>
